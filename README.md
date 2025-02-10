@@ -1,10 +1,13 @@
 # csc365-group-project
 
-## Database login
+## Database Login
 
 hostname: ambari-node5.csc.calpoly.edu
+
 username: songsdatabase
+
 default schema: ambari-node5.csc.calpoly.edu 
+
 password: coding 
 
 ## Steps To Get Project Running
