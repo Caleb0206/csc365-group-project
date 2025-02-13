@@ -5,15 +5,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import java.io.*;
+import java.sql.*;
 
 public class MainApp extends Application {
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("../../layout.fxml"));
-        primaryStage.setTitle("JavaFX App");
-        primaryStage.setScene(new Scene(root));
+    public void start(Stage primaryStage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("mainview.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        primaryStage.setTitle("JavaFX + MySQL");
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+
 
     public static void main(String[] args) {
         launch(args);
