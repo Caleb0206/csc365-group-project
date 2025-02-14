@@ -6,7 +6,7 @@ hostname: ambari-node5.csc.calpoly.edu
 
 username: songsdatabase
 
-default schema: ambari-node5.csc.calpoly.edu 
+default schema: songsdatabase
 
 password: coding 
 
