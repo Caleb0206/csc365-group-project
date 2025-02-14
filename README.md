@@ -6,9 +6,13 @@ hostname: ambari-node5.csc.calpoly.edu
 
 username: songsdatabase
 
-default schema: ambari-node5.csc.calpoly.edu 
+default schema: songsdatabase
 
 password: coding 
+
+## Connecting Database to Java
+
+**Link**: https://docs.google.com/document/d/182-Sja-jLnH_aoU_36JIgC0MZBzbzUzpCIQY_E2H0Ew/edit?tab=t.0
 
 ## Steps To Get Project Running
 
