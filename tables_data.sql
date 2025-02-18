@@ -7,7 +7,7 @@ INSERT INTO Artist (aname) VALUES
 ('Metallica');
 
 INSERT INTO Song (sname, album, genre, length) VALUES 
-('Espresso', '2024', 'pop', 175),
+('Espresso', 'Short n\' Sweet', 'pop', 175),
 ('Shake It Off', '1989', 'pop', 219),
 ('Gods Plan', 'Scorpion', 'hip-hop', 198),
 ('Dynamite', 'BE', 'kpop', 203),
@@ -21,4 +21,3 @@ INSERT INTO Performs (aid, sid) VALUES
 (4, 4), -- BTS -> Dynamite
 (5, 5), -- Ed Sheeran -> Shape of You
 (6, 6); -- Metallica -> Enter Sandman
-
