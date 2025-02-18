@@ -1,4 +1,5 @@
 INSERT INTO Artist (aname) VALUES 
+('Sabrina Carpenter'),
 ('Taylor Swift'),
 ('Drake'),
 ('BTS'),
@@ -6,6 +7,7 @@ INSERT INTO Artist (aname) VALUES
 ('Metallica');
 
 INSERT INTO Song (sname, album, genre, length) VALUES 
+('Espresso', '2024', 'pop', 175),
 ('Shake It Off', '1989', 'pop', 219),
 ('Gods Plan', 'Scorpion', 'hip-hop', 198),
 ('Dynamite', 'BE', 'kpop', 203),
@@ -13,9 +15,10 @@ INSERT INTO Song (sname, album, genre, length) VALUES
 ('Enter Sandman', 'Metallica', 'metal', 331);
 
 INSERT INTO Performs (aid, sid) VALUES 
-(1, 1), -- Taylor Swift -> Shake It Off
-(2, 2), -- Drake -> God's Plan
-(3, 3), -- BTS -> Dynamite
-(4, 4), -- Ed Sheeran -> Shape of You
-(5, 5); -- Metallica -> Enter Sandman
+(1, 1), -- Sabrina Carpenter -> Espresso
+(2, 2), -- Taylor Swift -> Shake It Off
+(3, 3), -- Drake -> God's Plan
+(4, 4), -- BTS -> Dynamite
+(5, 5), -- Ed Sheeran -> Shape of You
+(6, 6); -- Metallica -> Enter Sandman
 

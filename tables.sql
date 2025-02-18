@@ -20,3 +20,4 @@ create table Performs (
     foreign key(aid) references Artist(aid),
     foreign key(sid) references Song(sid)
 );
+
