@@ -10,6 +10,9 @@ import javafx.scene.control.Label;
 
 import java.awt.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainController {
 
@@ -51,8 +54,14 @@ public class MainController {
         radioButtonSong.setToggleGroup(toggleGroup);
         radioButtonAlbum.setToggleGroup(toggleGroup);
 
-        sortingChoice.getItems().addAll("Song Name");
-        sortingChoice.setValue("Song Name");
+        Set<String> sorts = new HashSet<>();
+        sorts.add("Song Name");
+        sorts.add("Song Duration");
+
+        for (String x : sorts){
+            sortingChoice.getItems().addAll(x);
+            sortingChoice.setValue(x);
+        }
     }
 
     private void connectToDatabase() {
@@ -151,16 +160,17 @@ public class MainController {
     @FXML
     public void onOpenFetchSongs() {
         String selectedSorting = "";
+        String orderByColumn = null;
+
         if (sortingChoice.getValue() == "Song Name") {
             selectedSorting = "Song Name";
-        }
-        String orderByColumn = "sname";
-        //Choose the query depending on the selected type
-        if (selectedSorting.equals("Length")) {
+            orderByColumn = "sname";
+        } else if (sortingChoice.getValue() == "Song Duration"){
+            selectedSorting = "Song Duration";
             orderByColumn = "length";
         }
-        String selectSQL = "select sname, album, length from Song order by " + orderByColumn + " asc;";
 
+        String selectSQL = "select sname, album, length from Song order by " + orderByColumn + " asc;";
 
         try (Statement statement = connect.createStatement()) {
             ResultSet rs = statement.executeQuery(selectSQL);
