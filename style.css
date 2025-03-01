@@ -1,0 +1,102 @@
+.anchor-pane {
+    -fx-background-color: #d8a1ff; /* Light Blue */
+}
+.btn {
+    -fx-padding: 8px 10px; /* Equivalent to py-2 px-6 */
+    -fx-background-color: #FACC15;
+    -fx-text-fill: #1E293B; /* Equivalent to text-accent-900 */
+    -fx-font-weight: 500; /* Equivalent to font-medium */
+    -fx-border-radius: 999px; /* Equivalent to rounded-full */
+    -fx-background-radius: 999px;
+    -fx-cursor: hand; /* Equivalent to cursor-pointer */
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+/* Hover effect */
+.btn:hover {
+    -fx-background-color: #D97706; /* Equivalent to hover:bg-accent-700 */
+    -fx-text-fill: white; /* Equivalent to hover:text-white */
+}
+
+/* Focus Effect */
+.search-bar:focused {
+    -fx-border-color: #2563EB; /* Blue border on focus */
+    -fx-background-color: white;
+}
+
+/* ==================== Radio Buttons ==================== */
+.radio-button {
+    -fx-padding: 4px 4px;
+    -fx-text-fill: #1E293B;
+    -fx-font-weight: 500;
+}
+
+.radio-button .radio {
+    -fx-background-color: white;
+    -fx-border-color: #9CA3AF;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50%;
+}
+
+.radio-button:selected .radio {
+    /* -fx-background-color: #2563EB; /* Blue when selected */
+    -fx-border-color: #2563EB;
+}
+
+/* ==================== ChoiceBox ==================== */
+.choice-box {
+    -fx-background-color: #F3F4F6;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-border-color: #D1D5DB;
+    -fx-border-width: 1px;
+    -fx-padding: 6px 10px;
+    -fx-text-fill: #1E293B;
+}
+
+.choice-box:hover {
+    -fx-background-color: #E5E7EB;
+}
+
+.choice-box .label {
+    -fx-text-fill: #1E293B;
+}
+
+.choice-box .context-menu {
+    -fx-background-color: white;
+    -fx-border-color: #D1D5DB;
+}
+
+/* ==================== ListView ==================== */
+.list-view {
+    -fx-background-color: #F9FAFB;
+    -fx-border-radius: 8px;
+    -fx-border-color: #D1D5DB;
+    -fx-border-width: 1px;
+    -fx-padding: 4px;
+}
+
+/* Selected Item */
+.list-cell:filled:selected {
+    -fx-background-color: #8cc6ff; /* Blue selection */
+    -fx-text-fill: black;
+}
+
+/* Hover Effect */
+.list-cell:filled:hover {
+    -fx-background-color: #8cc6ff;
+}
+
+/* ==================== ScrollBar Styling ==================== */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #9CA3AF;
+    -fx-background-radius: 6px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #6B7280;
+}

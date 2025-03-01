@@ -170,19 +170,22 @@ public class MainController {
             orderByColumn = "length";
         }
 
-        String selectSQL = "select sname, album, length from Song order by " + orderByColumn + " asc;";
+        String selectSQL = "select sname, aname, album, length from Song natural join Performs natural join Artist order by " + orderByColumn + " asc;";
 
         try (Statement statement = connect.createStatement()) {
+
             ResultSet rs = statement.executeQuery(selectSQL);
+            listViewResults.setStyle("-fx-font-family: 'Monospaced';"); // Or "Monospaced"
 
             labelViewInfo.setText("Songs sorted by: " + selectedSorting);
             listViewResults.getItems().clear();
             while(rs.next()) {
                 String songName = rs.getString("sname");
+                String artist = rs.getString("aname");
                 String album = rs.getString("album");
                 String length = rs.getString("length");
 
-                String result = String.format("%s | %s | %s", songName, album, length);
+                String result = String.format("%-20s | %-20s | %-20s | %5s", songName, artist, album, length);
                 listViewResults.getItems().add(result + "\n");
             }
         } catch (SQLException e) {
