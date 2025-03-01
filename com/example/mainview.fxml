@@ -7,30 +7,34 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.MainController">
+<AnchorPane prefHeight="642.0" prefWidth="784.0" styleClass="anchor-pane" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.MainController">
     <children>
-        <Button fx:id="buttonFetch" layoutX="442.0" layoutY="27.0" onAction="#onFetchButtonClick" text="Search" />
+        <Button fx:id="buttonFetch" layoutX="477.0" layoutY="31.0" onAction="#onFetchButtonClick" styleClass="btn" stylesheets="@../../style.css" text="Search" />
         <Label fx:id="connectDatabase" layoutX="45.0" layoutY="104.0" prefHeight="18.0" prefWidth="200.0" style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Database Server Status" />
 
-        <TextField fx:id="searchField" layoutX="160.0" layoutY="27.0" prefHeight="26.0" prefWidth="270.0" promptText="Search..." />
+        <TextField fx:id="searchField" layoutX="195.0" layoutY="31.0" prefHeight="26.0" prefWidth="270.0" promptText="Search..." />
 
               <!-- RadioButton options with ToggleGroup -->
-        <RadioButton fx:id="radioButtonArtist" layoutX="160.0" layoutY="58.0" text="Artist" />
-        <RadioButton fx:id="radioButtonSong" layoutX="233.0" layoutY="58.0" text="Song" />
-        <RadioButton fx:id="radioButtonAlbum" layoutX="300.0" layoutY="58.0" text="Album" />
+        <RadioButton fx:id="radioButtonArtist" layoutX="195.0" layoutY="62.0" text="Artist" />
+        <RadioButton fx:id="radioButtonSong" layoutX="268.0" layoutY="62.0" text="Song" />
+        <RadioButton fx:id="radioButtonAlbum" layoutX="335.0" layoutY="62.0" text="Album" />
 
-        <ChoiceBox fx:id="sortingChoice" layoutX="407.0" layoutY="134.0" onAction="#onOpenFetchSongs" prefWidth="150.0" />
+        <ChoiceBox fx:id="sortingChoice" layoutX="591.0" layoutY="132.0" onAction="#onOpenFetchSongs" prefWidth="150.0" />
 
-        <Label fx:id="labelViewInfo" layoutX="45.0" layoutY="152.0" prefHeight="18.0" prefWidth="291.0" style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Sort by" />
-        <ScrollPane layoutX="45.0" layoutY="179.0" prefHeight="380.0" prefWidth="511.0">
+        <Label fx:id="labelViewInfo" layoutX="45.0" layoutY="144.0" prefHeight="26.0" prefWidth="291.0" style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Sort by" />
+        <ScrollPane layoutX="45.0" layoutY="179.0" prefHeight="380.0" prefWidth="696.0">
             <content>
-                <ListView fx:id="listViewResults" prefHeight="315.0" prefWidth="506.0" />
+                <ListView fx:id="listViewResults" prefHeight="376.0" prefWidth="693.0">
+               <effect>
+                  <Glow />
+               </effect></ListView>
              </content>
           </ScrollPane>
 
-      <Button id="buttonResetSearch" layoutX="502.0" layoutY="27.0" mnemonicParsing="false" onAction="#onResetViewButtonClick" text="Reset" />
+      <Button id="buttonResetSearch" layoutX="537.0" layoutY="31.0" mnemonicParsing="false" onAction="#onResetViewButtonClick" styleClass="btn" stylesheets="@../../style.css" text="Reset" />
 
 
     </children>
