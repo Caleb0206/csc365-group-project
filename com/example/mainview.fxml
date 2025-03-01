@@ -35,6 +35,7 @@
           </ScrollPane>
 
       <Button id="buttonResetSearch" layoutX="537.0" layoutY="31.0" mnemonicParsing="false" onAction="#onResetViewButtonClick" styleClass="btn" stylesheets="@../../style.css" text="Reset" />
+      <Button fx:id="openAlbumModalButton" layoutX="625.0" layoutY="32.0" mnemonicParsing="false" onAction="#openAlbumModalButton" prefHeight="81.0" prefWidth="124.0" styleClass="btn" stylesheets="@../../style.css" text="Add Album" />
 
 
     </children>
