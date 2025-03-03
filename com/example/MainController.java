@@ -177,10 +177,10 @@ public class MainController {
         String selectedSorting = "";
         String orderByColumn = null;
 
-        if (sortingChoice.getValue() == "Song Name") {
+        if (sortingChoice.getValue().equals("Song Name")) {
             selectedSorting = "Song Name";
             orderByColumn = "sname";
-        } else if (sortingChoice.getValue() == "Song Duration"){
+        } else if (sortingChoice.getValue().equals("Song Duration")){
             selectedSorting = "Song Duration";
             orderByColumn = "length";
         }
