@@ -2,15 +2,19 @@ package com.example;
 
 import com.sun.javafx.scene.control.behavior.ChoiceBoxBehavior;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 
-import java.awt.*;
+import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,11 +50,13 @@ public class MainController {
     @FXML
     private Label connectDatabase;
 
-
     @FXML
     private ListView<String> listViewResults;
 
     private Boolean reverseSort = true;
+
+    @FXML
+    private Button openAlbumModalButton;
 
     @FXML
     public void initialize() {
@@ -96,6 +102,29 @@ public class MainController {
         //reverseToggle.selectToggle(null);
         onOpenFetchSongs();
     }
+
+
+
+    @FXML
+    private void openAlbumModalButton(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("create-album-modal.fxml"));
+            Parent root = fxmlLoader.load();
+
+            ModalController modalController = fxmlLoader.getController();
+            modalController.setMainController(this);
+
+            Stage modalStage = new Stage();
+            modalStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with the main window
+            modalStage.setTitle("Add new album");
+            modalStage.setScene(new Scene(root));
+            modalStage.showAndWait(); // Wait until the modal is closed
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void onFetchButtonClick() {
         //Get the search query from the search field
