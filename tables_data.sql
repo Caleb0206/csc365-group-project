@@ -21,3 +21,8 @@ INSERT INTO Performs (aid, sid) VALUES
 (4, 4), -- BTS -> Dynamite
 (5, 5), -- Ed Sheeran -> Shape of You
 (6, 6); -- Metallica -> Enter Sandman
+
+select * from Song;
+select * from Artist;
+select * from Performs;
+

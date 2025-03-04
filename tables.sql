@@ -17,7 +17,7 @@ create table Performs (
 	aid INT,
 	sid INT,
     primary key(aid, sid),
-    foreign key(aid) references Artist(aid),
-    foreign key(sid) references Song(sid)
+    foreign key(aid) references Artist(aid) on delete cascade,
+    foreign key(sid) references Song(sid) on delete cascade
 );
 

@@ -13,10 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 
-import java.awt.*;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -100,9 +98,12 @@ public class MainController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("create-album-modal.fxml"));
             Parent root = fxmlLoader.load();
 
+            ModalController modalController = fxmlLoader.getController();
+            modalController.setMainController(this);
+
             Stage modalStage = new Stage();
             modalStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with the main window
-            modalStage.setTitle("Modal Window");
+            modalStage.setTitle("Add new album");
             modalStage.setScene(new Scene(root));
             modalStage.showAndWait(); // Wait until the modal is closed
 
