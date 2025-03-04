@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -36,6 +37,8 @@
 
       <Button id="buttonResetSearch" layoutX="537.0" layoutY="31.0" mnemonicParsing="false" onAction="#onResetViewButtonClick" styleClass="btn" stylesheets="@../../style.css" text="Reset" />
       <Button fx:id="openAlbumModalButton" layoutX="625.0" layoutY="32.0" mnemonicParsing="false" onAction="#openAlbumModalButton" prefHeight="81.0" prefWidth="124.0" styleClass="btn" stylesheets="@../../style.css" text="Add Album" />
+      <CheckBox fx:id="checkboxReverse" layoutX="524.0" layoutY="148.0" mnemonicParsing="false" text="Reverse" />
+
 
 
     </children>

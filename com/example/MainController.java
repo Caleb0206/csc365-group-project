@@ -32,9 +32,15 @@ public class MainController {
     private RadioButton radioButtonSong;
 
     @FXML
+    private CheckBox checkboxReverse;
+
+    @FXML
     private RadioButton radioButtonAlbum;
 
     private ToggleGroup toggleGroup;
+
+    private ToggleGroup reverseToggle;
+
     @FXML
     private ChoiceBox sortingChoice;
 
@@ -46,6 +52,8 @@ public class MainController {
 
     @FXML
     private ListView<String> listViewResults;
+
+    private Boolean reverseSort = true;
 
     @FXML
     private Button openAlbumModalButton;
@@ -59,6 +67,10 @@ public class MainController {
         radioButtonArtist.setToggleGroup(toggleGroup);
         radioButtonSong.setToggleGroup(toggleGroup);
         radioButtonAlbum.setToggleGroup(toggleGroup);
+
+        checkboxReverse.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            onOpenFetchSongs(); // Refresh song list when checkbox changes
+        });
 
         Set<String> sorts = new HashSet<>();
         sorts.add("Song Name");
@@ -87,6 +99,7 @@ public class MainController {
     public void onResetViewButtonClick() {
         listViewResults.getItems().clear();
         toggleGroup.selectToggle(null); // clear ToggleGroup's radio items
+        //reverseToggle.selectToggle(null);
         onOpenFetchSongs();
     }
 
@@ -176,8 +189,10 @@ public class MainController {
                     resultsFound = true;
                 }
 
+                System.out.println(" mark: " + checkboxReverse);
+
                 if (!resultsFound) {
-                    listViewResults.getItems().add("No results found for " + selectedType + ": " + searchQuery + "\n");
+                    listViewResults.getItems().add("No results found for " + selectedType + ": " + searchQuery + (checkboxReverse.isSelected()? " asc;" : " desc;") + "\n");
                 }
             }
         } catch (SQLException e) {
@@ -191,15 +206,15 @@ public class MainController {
         String selectedSorting = "";
         String orderByColumn = null;
 
-        if (sortingChoice.getValue() == "Song Name") {
+        if (sortingChoice.getValue().equals("Song Name")) {
             selectedSorting = "Song Name";
             orderByColumn = "sname";
-        } else if (sortingChoice.getValue() == "Song Duration"){
+        } else if (sortingChoice.getValue().equals("Song Duration")){
             selectedSorting = "Song Duration";
             orderByColumn = "length";
         }
 
-        String selectSQL = "select sname, aname, album, length from Song natural join Performs natural join Artist order by " + orderByColumn + " asc;";
+        String selectSQL = "select sname, aname, album, length from Song natural join Performs natural join Artist order by " + orderByColumn + (checkboxReverse.isSelected()? " asc;" : " desc;");
 
         try (Statement statement = connect.createStatement()) {
 
