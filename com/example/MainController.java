@@ -127,17 +127,14 @@ public class MainController {
 
     @FXML
     public void onFetchButtonClick() {
-        //Get the search query from the search field
         String searchQuery = searchField.getText().toLowerCase();
 
-        //Validate input
         if (searchQuery.trim().isEmpty()) {
             listViewResults.getItems().clear();
             listViewResults.getItems().add("Please enter a search query.\n");
             return;
         }
 
-        //Determine the selected search type
         String selectedType = "";
         if (radioButtonArtist.isSelected()) {
             selectedType = "Artist";
@@ -153,46 +150,47 @@ public class MainController {
             return;
         }
 
-        //Construct the query based on selected type
         String selectSQL = "";
-        String column = ""; //column to search (either 'aname', 'sname', or 'album')
 
-        //Choose the query depending on the selected type
         if (selectedType.equals("Artist")) {
-            selectSQL = "select s.sname from Song s " +
-                    "inner join Performs p on s.sid = p.sid " +
-                    "inner join Artist a on p.aid = a.aid " +
-                    "where a.aname LIKE ?;";
-            column = "sname"; // We will display song names based on artist
+            selectSQL = "SELECT s.sname, a.aname, s.album, s.length FROM Song s " +
+                    "INNER JOIN Performs p ON s.sid = p.sid " +
+                    "INNER JOIN Artist a ON p.aid = a.aid " +
+                    "WHERE a.aname LIKE ?;";
         } else if (selectedType.equals("Song")) {
-            selectSQL = "select sname from Song where sname LIKE ?;";
-            column = "sname"; // Search by song name
+            selectSQL = "SELECT s.sname, a.aname, s.album, s.length FROM Song s " +
+                    "INNER JOIN Performs p ON s.sid = p.sid " +
+                    "INNER JOIN Artist a ON p.aid = a.aid " +
+                    "WHERE s.sname LIKE ?;";
         } else if (selectedType.equals("Album")) {
-            selectSQL = "select sname from Song where album LIKE ?;";
-            column = "sname"; // Search by album name and display song names
+            selectSQL = "SELECT s.sname, a.aname, s.album, s.length FROM Song s " +
+                    "INNER JOIN Performs p ON s.sid = p.sid " +
+                    "INNER JOIN Artist a ON p.aid = a.aid " +
+                    "WHERE s.album LIKE ?;";
         }
 
         try (PreparedStatement preparedStatement = connect.prepareStatement(selectSQL)) {
-            //Set the parameter with the search query wrapped in wildcards for partial match
             preparedStatement.setString(1, "%" + searchQuery + "%");
 
-            //Execute the query
             try (ResultSet rs = preparedStatement.executeQuery()) {
-                listViewResults.getItems().clear();  //Clear any previous output
+                listViewResults.getItems().clear();
+                listViewResults.setStyle("-fx-font-family: 'Monospaced';");
                 labelViewInfo.setText(selectedType + " Search Results:\n");
 
-                //Check if any results were found
                 boolean resultsFound = false;
                 while (rs.next()) {
-                    String result = rs.getString(column);  //Retrieve the value based on the selected type
-                    listViewResults.getItems().add(result + "\n");  //Display the result in the text area
+                    String songName = rs.getString("sname");
+                    String artist = rs.getString("aname");
+                    String album = rs.getString("album");
+                    String length = rs.getString("length");
+
+                    String result = String.format("%-25s | %-20s | %-24s | %4s", songName, artist, album, length);
+                    listViewResults.getItems().add(result + "\n");
                     resultsFound = true;
                 }
 
-                System.out.println(" mark: " + checkboxReverse);
-
                 if (!resultsFound) {
-                    listViewResults.getItems().add("No results found for " + selectedType + ": " + searchQuery + (checkboxReverse.isSelected()? " asc;" : " desc;") + "\n");
+                    listViewResults.getItems().add("No results found for " + selectedType + ": " + searchQuery + (checkboxReverse.isSelected() ? " asc;" : " desc;") + "\n");
                 }
             }
         } catch (SQLException e) {
