@@ -15,7 +15,7 @@ public class MainApp extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("mainview.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
-        primaryStage.setTitle("JavaFX + MySQL");
+        primaryStage.setTitle("Music Database");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
