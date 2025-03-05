@@ -100,3 +100,12 @@
 .scroll-bar .thumb:hover {
     -fx-background-color: #6B7280;
 }
+
+/* ======== */
+.body-text {
+    -fx-font-family: "Inter", "Segoe UI", "Arial", sans-serif;
+    -fx-font-size: 16px;
+    -fx-text-fill: #333333; /* Dark gray for readability */
+    -fx-line-spacing: 4px;
+    -fx-padding: 10px;
+}

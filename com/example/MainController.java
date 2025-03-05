@@ -229,7 +229,7 @@ public class MainController {
                 String album = rs.getString("album");
                 String length = rs.getString("length");
 
-                String result = String.format("%-20s | %-20s | %-20s | %5s", songName, artist, album, length);
+                String result = String.format("%-25s | %-20s | %-24s | %4s", songName, artist, album, length);
                 listViewResults.getItems().add(result + "\n");
             }
         } catch (SQLException e) {
