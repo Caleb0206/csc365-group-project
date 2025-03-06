@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class MainController {
 
@@ -53,7 +56,11 @@ public class MainController {
     @FXML
     private ListView<String> listViewResults;
 
-    private Boolean reverseSort = true;
+    private boolean isSearchMode = false;
+    private List<String> currentResults = new ArrayList<>();
+    private boolean showingSearchResults = false;
+
+
 
     @FXML
     private Button openAlbumModalButton;
@@ -62,24 +69,19 @@ public class MainController {
     public void initialize() {
         connectToDatabase();
 
-        //Initialize the ToggleGroup and assign it to the radio buttons
         toggleGroup = new ToggleGroup();
         radioButtonArtist.setToggleGroup(toggleGroup);
         radioButtonSong.setToggleGroup(toggleGroup);
         radioButtonAlbum.setToggleGroup(toggleGroup);
 
         checkboxReverse.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            onOpenFetchSongs(); // Refresh song list when checkbox changes
+                onOpenFetchSongs();
         });
 
-        Set<String> sorts = new HashSet<>();
-        sorts.add("Song Name");
-        sorts.add("Song Duration");
+        sortingChoice.getItems().addAll("Song Name", "Song Duration");
+        sortingChoice.setValue("Song Name");
 
-        for (String x : sorts){
-            sortingChoice.getItems().addAll(x);
-            sortingChoice.setValue(x);
-        }
+        onOpenFetchSongs(); //Load all songs on startup
     }
 
     private void connectToDatabase() {
@@ -98,8 +100,10 @@ public class MainController {
     @FXML
     public void onResetViewButtonClick() {
         listViewResults.getItems().clear();
-        toggleGroup.selectToggle(null); // clear ToggleGroup's radio items
-        //reverseToggle.selectToggle(null);
+        toggleGroup.selectToggle(null);
+        searchField.clear();
+        showingSearchResults = false;
+        currentResults.clear();
         onOpenFetchSongs();
     }
 
@@ -174,6 +178,9 @@ public class MainController {
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 listViewResults.getItems().clear();
+                currentResults.clear();
+                showingSearchResults = true;
+
                 listViewResults.setStyle("-fx-font-family: 'Monospaced';");
                 labelViewInfo.setText(selectedType + " Search Results:\n");
 
@@ -182,15 +189,17 @@ public class MainController {
                     String songName = rs.getString("sname");
                     String artist = rs.getString("aname");
                     String album = rs.getString("album");
-                    String length = rs.getString("length");
+                    String length = formatDuration(rs.getInt("length"));
 
-                    String result = String.format("%-25s | %-20s | %-24s | %4s", songName, artist, album, length);
-                    listViewResults.getItems().add(result + "\n");
+                    String result = String.format("%-25s | %-20s | %-24s | %5s", songName, artist, album, length);
+                    currentResults.add(result + "\n");
                     resultsFound = true;
                 }
 
                 if (!resultsFound) {
-                    listViewResults.getItems().add("No results found for " + selectedType + ": " + searchQuery + (checkboxReverse.isSelected() ? " asc;" : " desc;") + "\n");
+                    listViewResults.getItems().add("No results found for " + selectedType + ": " + searchQuery + "\n");
+                } else {
+                    applySorting();
                 }
             }
         } catch (SQLException e) {
@@ -199,40 +208,76 @@ public class MainController {
             e.printStackTrace();
         }
     }
-    @FXML
-    public void onOpenFetchSongs() {
-        String selectedSorting = "";
-        String orderByColumn = null;
 
-        if (sortingChoice.getValue().equals("Song Name")) {
-            selectedSorting = "Song Name";
-            orderByColumn = "sname";
-        } else if (sortingChoice.getValue().equals("Song Duration")){
-            selectedSorting = "Song Duration";
-            orderByColumn = "length";
+    private void applySorting() {
+        String selectedSorting = (String) sortingChoice.getValue();
+        boolean reverse = checkboxReverse.isSelected();
+
+        Comparator<String> comparator;
+        if ("Song Name".equals(selectedSorting)) {
+            comparator = Comparator.comparing(s -> s.substring(0, 25).trim().toLowerCase());
+        } else {
+            comparator = Comparator.comparing(s -> {
+                String time = s.substring(s.lastIndexOf("|") + 1).trim();
+                String[] parts = time.split(":");
+                return Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
+            });
         }
 
-        String selectSQL = "select sname, aname, album, length from Song natural join Performs natural join Artist order by " + orderByColumn + (checkboxReverse.isSelected()? " asc;" : " desc;");
+        currentResults.sort(reverse ? comparator.reversed() : comparator);
+
+        listViewResults.getItems().setAll(currentResults);
+    }
+
+    @FXML
+    public void onOpenFetchSongs() {
+        if (showingSearchResults) {
+            applySorting();
+            return;
+        }
+
+        String selectedSorting = (String) sortingChoice.getValue();
+        boolean reverse = checkboxReverse.isSelected();
+
+        String selectSQL = "SELECT sname, aname, album, length FROM Song " +
+                "NATURAL JOIN Performs NATURAL JOIN Artist";
+
+        if ("Song Name".equals(selectedSorting)) {
+            selectSQL += " ORDER BY LOWER(sname)" + (reverse ? " DESC;" : " ASC;");
+        } else if ("Song Duration".equals(selectedSorting)) {
+            selectSQL += " ORDER BY length" + (reverse ? " DESC;" : " ASC;");
+        }
 
         try (Statement statement = connect.createStatement()) {
 
             ResultSet rs = statement.executeQuery(selectSQL);
-            listViewResults.setStyle("-fx-font-family: 'Monospaced';"); // Or "Monospaced"
-
+            listViewResults.setStyle("-fx-font-family: 'Monospaced';");
             labelViewInfo.setText("Songs sorted by: " + selectedSorting);
+
             listViewResults.getItems().clear();
-            while(rs.next()) {
+
+            while (rs.next()) {
                 String songName = rs.getString("sname");
                 String artist = rs.getString("aname");
                 String album = rs.getString("album");
-                String length = rs.getString("length");
+                int length = rs.getInt("length");
 
-                String result = String.format("%-25s | %-20s | %-24s | %4s", songName, artist, album, length);
+                String lengthFormatted = formatDuration(length);
+
+                String result = String.format("%-25s | %-20s | %-24s | %5s", songName, artist, album, lengthFormatted);
                 listViewResults.getItems().add(result + "\n");
             }
+
         } catch (SQLException e) {
             listViewResults.getItems().add("Error fetching data: " + e.getMessage() + "\n");
             e.printStackTrace();
         }
+    }
+
+    //Helper method to convert seconds to "mm:ss"
+    private String formatDuration(int totalSeconds) {
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        return String.format("%d:%02d", minutes, seconds);
     }
 }
