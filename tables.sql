@@ -20,4 +20,18 @@ create table Performs (
     foreign key(aid) references Artist(aid) on delete cascade,
     foreign key(sid) references Song(sid) on delete cascade
 );
+create table Playlist (
+	plid INT auto_increment primary key,
+    plname VARCHAR(30)    
+);
+create table Playlist_Song (
+	plid INT,
+    sid INT,
+    primary key (plid, sid),
+    song_order int not null,
+    foreign key (plid) references Playlist(plid) on delete cascade,
+    foreign key (sid) references Song(sid) on delete cascade
+);
 
+drop table Playlist_Song;
+drop table Playlist;

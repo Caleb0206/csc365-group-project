@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
@@ -12,10 +14,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
@@ -24,7 +28,7 @@ import java.util.Comparator;
 public class MainController {
 
     private Connection connect;
-
+    private PlaylistController playlistController;
     @FXML
     private TextField searchField;
 
@@ -65,11 +69,16 @@ public class MainController {
 
 
     @FXML
-    private Button openAlbumModalButton;
+    private TabPane tabPane;
+
 
     @FXML
     public void initialize() {
         connectToDatabase();
+        playlistController = new PlaylistController(connect, tabPane);
+        if (tabPane == null) {
+            System.out.println("Error: tabPane is null");
+        }
 
         toggleGroup = new ToggleGroup();
         radioButtonArtist.setToggleGroup(toggleGroup);
@@ -82,6 +91,15 @@ public class MainController {
 
         sortingChoice.getItems().addAll("Song Name", "Song Duration");
         sortingChoice.setValue("Song Name");
+
+
+        for (String x : sorts){
+            sortingChoice.getItems().addAll(x);
+            sortingChoice.setValue(x);
+        }
+
+        // Load existing playlists on startup
+        playlistController.loadExistingPlaylists();
 
         genreChoice.getItems().addAll(
                 "All Genres", "Pop", "Hip-Hop", "Rap", "Country", "Reggae",
@@ -101,6 +119,7 @@ public class MainController {
         });
 
         onOpenFetchSongs(); //Load all songs on startup
+
     }
 
     private void connectToDatabase() {
@@ -339,10 +358,31 @@ public class MainController {
         }
     }
 
+
+    // Playlist Creation
+    @FXML
+    private void onCreatePlaylist() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Create Playlist");
+        dialog.setHeaderText("Enter Playlist Name");
+        dialog.setContentText("Playlist Name:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(playlistName -> {
+            playlistController.insertPlaylistIntoDatabase(playlistName);  // Save to DB
+            playlistController.createPlaylistTab(playlistName);          // Create a new tab
+        });
+    }
+
+
+
+
+
     //Helper method to convert seconds to "mm:ss"
     private String formatDuration(int totalSeconds) {
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
         return String.format("%d:%02d", minutes, seconds);
     }
+
 }

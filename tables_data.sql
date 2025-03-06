@@ -22,6 +22,9 @@ INSERT INTO Performs (aid, sid) VALUES
 (5, 5), -- Ed Sheeran -> Shape of You
 (6, 6); -- Metallica -> Enter Sandman
 
+INSERT INTO Playlist (plname) VALUES ('Playlist#1');
+INSERT INTO Playlist_Song (plid, sid) VALUES (1, 1);
+
 select * from Song;
 select * from Artist;
 select * from Performs;
