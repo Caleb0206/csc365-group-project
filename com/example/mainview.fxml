@@ -8,43 +8,52 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="642.0" prefWidth="784.0" styleClass="anchor-pane" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.MainController">
-    <children>
-        <Button fx:id="buttonFetch" layoutX="477.0" layoutY="31.0" onAction="#onFetchButtonClick" styleClass="btn" stylesheets="@../../style.css" text="Search" />
-        <Label fx:id="connectDatabase" layoutX="45.0" layoutY="104.0" prefHeight="18.0" prefWidth="200.0" styleClass="body-text" text="Database Server Status" />
+<TabPane fx:id="tabPane" prefHeight="700.0" prefWidth="784.0" styleClass="anchor-pane" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.MainController">
+    <tabs>
+        <Tab text="Songs">
+            <AnchorPane prefHeight="642.0" prefWidth="784.0" styleClass="anchor-pane" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+                <children>
+                    <Button fx:id="buttonFetch" layoutX="477.0" layoutY="31.0" onAction="#onFetchButtonClick" styleClass="btn" stylesheets="@../../style.css" text="Search" />
+                    <Label fx:id="connectDatabase" layoutX="45.0" layoutY="104.0" prefHeight="18.0" prefWidth="200.0" styleClass="body-text" text="Database Server Status" />
 
-        <TextField fx:id="searchField" layoutX="195.0" layoutY="31.0" prefHeight="26.0" prefWidth="270.0" promptText="Search..." />
+                    <TextField fx:id="searchField" layoutX="195.0" layoutY="31.0" prefHeight="26.0" prefWidth="270.0" promptText="Search..." />
 
-              <!-- RadioButton options with ToggleGroup -->
-        <RadioButton fx:id="radioButtonArtist" layoutX="195.0" layoutY="62.0" prefWidth="86.0" styleClass="body-text" text="Artist" />
-        <RadioButton fx:id="radioButtonSong" layoutX="287.0" layoutY="62.0" styleClass="body-text" text="Song" />
-        <RadioButton fx:id="radioButtonAlbum" layoutX="379.0" layoutY="62.0" styleClass="body-text" text="Album" />
+                    <!-- RadioButton options with ToggleGroup -->
+                    <RadioButton fx:id="radioButtonArtist" layoutX="195.0" layoutY="62.0" prefWidth="86.0" styleClass="body-text" text="Artist" />
+                    <RadioButton fx:id="radioButtonSong" layoutX="287.0" layoutY="62.0" styleClass="body-text" text="Song" />
+                    <RadioButton fx:id="radioButtonAlbum" layoutX="379.0" layoutY="62.0" styleClass="body-text" text="Album" />
 
-        <ChoiceBox fx:id="sortingChoice" layoutX="591.0" layoutY="132.0" onAction="#onOpenFetchSongs" prefWidth="150.0" styleClass="context-menu" />
+                    <ChoiceBox fx:id="sortingChoice" layoutX="591.0" layoutY="132.0" onAction="#onOpenFetchSongs" prefWidth="150.0" styleClass="context-menu" />
 
-        <Label fx:id="labelViewInfo" layoutX="45.0" layoutY="144.0" prefHeight="26.0" prefWidth="291.0" styleClass="body-text" text="Sort by" />
-        <ScrollPane hbarPolicy="NEVER" layoutX="45.0" layoutY="179.0" prefHeight="380.0" prefWidth="696.0">
-            <content>
-                <ListView fx:id="listViewResults" prefHeight="376.0" prefWidth="693.0">
-               <effect>
-                  <Glow />
-               </effect></ListView>
-             </content>
-          </ScrollPane>
+                    <Label fx:id="labelViewInfo" layoutX="45.0" layoutY="144.0" prefHeight="26.0" prefWidth="291.0" styleClass="body-text" text="Sort by" />
+                    <ScrollPane hbarPolicy="NEVER" layoutX="45.0" layoutY="179.0" prefHeight="380.0" prefWidth="696.0">
+                        <content>
+                            <ListView fx:id="listViewResults" prefHeight="376.0" prefWidth="693.0">
+                                <effect>
+                                    <Glow />
+                                </effect></ListView>
+                        </content>
+                    </ScrollPane>
 
-      <Button id="buttonResetSearch" layoutX="537.0" layoutY="31.0" mnemonicParsing="false" onAction="#onResetViewButtonClick" styleClass="btn" stylesheets="@../../style.css" text="Reset" />
-      <Button fx:id="openAlbumModalButton" layoutX="625.0" layoutY="32.0" mnemonicParsing="false" onAction="#openAlbumModalButton" prefHeight="81.0" prefWidth="124.0" stylesheets="@../../style.css" text="Add Album">
-         <styleClass>
-            <String fx:value="btn" />
-            <String fx:value="body-text" />
-         </styleClass></Button>
-      <CheckBox fx:id="checkboxReverse" layoutX="483.0" layoutY="129.0" mnemonicParsing="false" styleClass="body-text" text="Reverse" />
+                    <Button id="buttonResetSearch" layoutX="537.0" layoutY="31.0" mnemonicParsing="false" onAction="#onResetViewButtonClick" styleClass="btn" stylesheets="@../../style.css" text="Reset" />
+                    <Button fx:id="openAlbumModalButton" layoutX="625.0" layoutY="32.0" mnemonicParsing="false" onAction="#openAlbumModalButton" prefHeight="81.0" prefWidth="124.0" stylesheets="@../../style.css" text="Add Album">
+                        <styleClass>
+                            <String fx:value="btn" />
+                            <String fx:value="body-text" />
+                        </styleClass></Button>
+                    <CheckBox fx:id="checkboxReverse" layoutX="483.0" layoutY="129.0" mnemonicParsing="false" styleClass="body-text" text="Reverse" />
 
 
+                    <Button fx:id="createPlaylistButton" layoutX="45.0" layoutY="573.0" onAction="#onCreatePlaylist" style="-fx-background-color: lightblue;" styleClass="btn" text="Create Playlist" />
+                </children>
+            </AnchorPane>
+        </Tab>
 
-    </children>
-</AnchorPane>
+    </tabs>
+</TabPane>

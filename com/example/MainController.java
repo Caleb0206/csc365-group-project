@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
@@ -12,16 +14,18 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class MainController {
 
     private Connection connect;
-
+    private PlaylistController playlistController;
     @FXML
     private TextField searchField;
 
@@ -53,14 +57,17 @@ public class MainController {
     @FXML
     private ListView<String> listViewResults;
 
-    private Boolean reverseSort = true;
-
     @FXML
-    private Button openAlbumModalButton;
+    private TabPane tabPane;
+
 
     @FXML
     public void initialize() {
         connectToDatabase();
+        playlistController = new PlaylistController(connect, tabPane);
+        if (tabPane == null) {
+            System.out.println("Error: tabPane is null");
+        }
 
         //Initialize the ToggleGroup and assign it to the radio buttons
         toggleGroup = new ToggleGroup();
@@ -80,6 +87,9 @@ public class MainController {
             sortingChoice.getItems().addAll(x);
             sortingChoice.setValue(x);
         }
+
+        // Load existing playlists on startup
+        playlistController.loadExistingPlaylists();
     }
 
     private void connectToDatabase() {
@@ -235,4 +245,23 @@ public class MainController {
             e.printStackTrace();
         }
     }
+
+    // Playlist Creation
+    @FXML
+    private void onCreatePlaylist() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Create Playlist");
+        dialog.setHeaderText("Enter Playlist Name");
+        dialog.setContentText("Playlist Name:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(playlistName -> {
+            playlistController.insertPlaylistIntoDatabase(playlistName);  // Save to DB
+            playlistController.createPlaylistTab(playlistName);          // Create a new tab
+        });
+    }
+
+
+
+
 }
