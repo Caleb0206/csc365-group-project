@@ -93,11 +93,6 @@ public class MainController {
         sortingChoice.setValue("Song Name");
 
 
-        for (String x : sorts){
-            sortingChoice.getItems().addAll(x);
-            sortingChoice.setValue(x);
-        }
-
         // Load existing playlists on startup
         playlistController.loadExistingPlaylists();
 
