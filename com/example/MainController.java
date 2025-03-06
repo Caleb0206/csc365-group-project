@@ -56,9 +56,11 @@ public class MainController {
     @FXML
     private ListView<String> listViewResults;
 
-    private boolean isSearchMode = false;
     private List<String> currentResults = new ArrayList<>();
     private boolean showingSearchResults = false;
+
+    @FXML
+    private ChoiceBox genreChoice;
 
 
 
@@ -75,11 +77,28 @@ public class MainController {
         radioButtonAlbum.setToggleGroup(toggleGroup);
 
         checkboxReverse.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                onOpenFetchSongs();
+                onFetchButtonClick();
         });
 
         sortingChoice.getItems().addAll("Song Name", "Song Duration");
         sortingChoice.setValue("Song Name");
+
+        genreChoice.getItems().addAll(
+                "All Genres", "Pop", "Hip-Hop", "Rap", "Country", "Reggae",
+                "R&B", "Folk", "Blues", "EDM", "Classical", "Rock", "Jazz",
+                "Metal", "Punk", "Latin", "K-Pop", "Other"
+        );
+        genreChoice.setValue("All Genres");
+
+        //Add a listener to genreChoice to trigger fetching songs when selection changes
+        genreChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            onFetchButtonClick();
+        });
+
+        //Add a listener to sortingChoice to trigger fetching songs when selection changes
+        sortingChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            onFetchButtonClick();
+        });
 
         onOpenFetchSongs(); //Load all songs on startup
     }
@@ -104,6 +123,10 @@ public class MainController {
         searchField.clear();
         showingSearchResults = false;
         currentResults.clear();
+        checkboxReverse.setSelected(false);
+        sortingChoice.setValue("Song Name");
+        genreChoice.setValue("All Genres");
+
         onOpenFetchSongs();
     }
 
@@ -132,78 +155,106 @@ public class MainController {
     @FXML
     public void onFetchButtonClick() {
         String searchQuery = searchField.getText().toLowerCase();
-
-        if (searchQuery.trim().isEmpty()) {
-            listViewResults.getItems().clear();
-            listViewResults.getItems().add("Please enter a search query.\n");
+        String selectedGenre = (String) genreChoice.getValue();
+        
+        //If neither search query nor genre is selected, show a message and return early
+        if (searchQuery.trim().isEmpty() && "All Genres".equals(selectedGenre)) {
+            onOpenFetchSongs();
             return;
         }
 
         String selectedType = "";
-        if (radioButtonArtist.isSelected()) {
-            selectedType = "Artist";
-        } else if (radioButtonSong.isSelected()) {
-            selectedType = "Song";
-        } else if (radioButtonAlbum.isSelected()) {
-            selectedType = "Album";
-        }
+        if(!searchQuery.trim().isEmpty()){
+            if (radioButtonArtist.isSelected()) {
+                selectedType = "Artist";
+            } else if (radioButtonSong.isSelected()) {
+                selectedType = "Song";
+            } else if (radioButtonAlbum.isSelected()) {
+                selectedType = "Album";
+            }
+            }
 
-        if (selectedType.isEmpty()) {
+        if (!searchQuery.trim().isEmpty() && selectedType.isEmpty()) {
             listViewResults.getItems().clear();
             listViewResults.getItems().add("Please select a search option (Artist, Song, or Album).\n");
             return;
         }
 
         String selectSQL = "";
+        String searchCondition = " WHERE ";
+        String genreCondition = "";
 
-        if (selectedType.equals("Artist")) {
-            selectSQL = "SELECT s.sname, a.aname, s.album, s.length FROM Song s " +
-                    "INNER JOIN Performs p ON s.sid = p.sid " +
-                    "INNER JOIN Artist a ON p.aid = a.aid " +
-                    "WHERE a.aname LIKE ?;";
-        } else if (selectedType.equals("Song")) {
-            selectSQL = "SELECT s.sname, a.aname, s.album, s.length FROM Song s " +
-                    "INNER JOIN Performs p ON s.sid = p.sid " +
-                    "INNER JOIN Artist a ON p.aid = a.aid " +
-                    "WHERE s.sname LIKE ?;";
-        } else if (selectedType.equals("Album")) {
-            selectSQL = "SELECT s.sname, a.aname, s.album, s.length FROM Song s " +
-                    "INNER JOIN Performs p ON s.sid = p.sid " +
-                    "INNER JOIN Artist a ON p.aid = a.aid " +
-                    "WHERE s.album LIKE ?;";
+        //Set the SQL query
+        selectSQL = "SELECT s.sname, a.aname, s.album, s.length, s.genre FROM Song s " +
+                "INNER JOIN Performs p ON s.sid = p.sid " +
+                "INNER JOIN Artist a ON p.aid = a.aid ";
+
+        //Apply search query condition if not empty
+        if (!searchQuery.trim().isEmpty()) {
+            if (selectedType.equals("Artist")) {
+                selectSQL += searchCondition + "a.aname LIKE ?";
+            } else if (selectedType.equals("Song")) {
+                selectSQL += searchCondition + "s.sname LIKE ?";
+            } else if (selectedType.equals("Album")) {
+                selectSQL += searchCondition + "s.album LIKE ?";
+            }
+            searchCondition = " AND ";
         }
 
+        //Apply genre condition if a genre other than "All Genres" is selected
+        if (!"All Genres".equals(selectedGenre)) {
+            selectSQL += searchCondition + "s.genre = ?";
+        }
+
+        //Apply sorting if selected
+        String selectedSorting = (String) sortingChoice.getValue();
+        boolean reverse = checkboxReverse.isSelected();
+
+        if ("Song Name".equals(selectedSorting)) {
+            selectSQL += " ORDER BY LOWER(s.sname)" + (reverse ? " DESC;" : " ASC;");
+        } else if ("Song Duration".equals(selectedSorting)) {
+            selectSQL += " ORDER BY s.length" + (reverse ? " DESC;" : " ASC;");
+        }
+
+        //Execute the query with the correct parameters
         try (PreparedStatement preparedStatement = connect.prepareStatement(selectSQL)) {
-            preparedStatement.setString(1, "%" + searchQuery + "%");
+            int parameterIndex = 1;
+            //Set search query parameter if not empty
+            if (!searchQuery.trim().isEmpty()) {
+                preparedStatement.setString(parameterIndex++, "%" + searchQuery + "%");
+            }
+
+            //Set genre parameter if not "All Genres"
+            if (!"All Genres".equals(selectedGenre)) {
+                preparedStatement.setString(parameterIndex, selectedGenre);
+            }
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
-                listViewResults.getItems().clear();
-                currentResults.clear();
-                showingSearchResults = true;
-
                 listViewResults.setStyle("-fx-font-family: 'Monospaced';");
-                labelViewInfo.setText(selectedType + " Search Results:\n");
+                labelViewInfo.setText(selectedType + " Search Results:");
 
+                listViewResults.getItems().clear();
                 boolean resultsFound = false;
+
                 while (rs.next()) {
                     String songName = rs.getString("sname");
                     String artist = rs.getString("aname");
                     String album = rs.getString("album");
-                    String length = formatDuration(rs.getInt("length"));
+                    int length = rs.getInt("length");
 
-                    String result = String.format("%-25s | %-20s | %-24s | %5s", songName, artist, album, length);
-                    currentResults.add(result + "\n");
+                    String lengthFormatted = formatDuration(length);
+
+                    String result = String.format("%-25s | %-20s | %-24s | %5s", songName, artist, album, lengthFormatted);
+                    listViewResults.getItems().add(result + "\n");
                     resultsFound = true;
                 }
 
                 if (!resultsFound) {
-                    listViewResults.getItems().add("No results found for " + selectedType + ": " + searchQuery + "\n");
-                } else {
-                    applySorting();
+                    listViewResults.getItems().add("No results found.\n");
                 }
+
             }
         } catch (SQLException e) {
-            listViewResults.getItems().clear();
             listViewResults.getItems().add("Error fetching data: " + e.getMessage() + "\n");
             e.printStackTrace();
         }
@@ -239,35 +290,49 @@ public class MainController {
         String selectedSorting = (String) sortingChoice.getValue();
         boolean reverse = checkboxReverse.isSelected();
 
-        String selectSQL = "SELECT sname, aname, album, length FROM Song " +
+        //Get the selected genre from the genreChoice dropdown
+        String selectedGenre = (String) genreChoice.getValue();
+
+        String selectSQL = "SELECT sname, aname, album, length, genre FROM Song " +
                 "NATURAL JOIN Performs NATURAL JOIN Artist";
 
+        //Add filtering for the selected genre
+        if (!"All Genres".equals(selectedGenre)) {
+            selectSQL += " WHERE genre = ?";
+        }
+
+        //Apply sorting based on user choice
         if ("Song Name".equals(selectedSorting)) {
             selectSQL += " ORDER BY LOWER(sname)" + (reverse ? " DESC;" : " ASC;");
         } else if ("Song Duration".equals(selectedSorting)) {
             selectSQL += " ORDER BY length" + (reverse ? " DESC;" : " ASC;");
         }
 
-        try (Statement statement = connect.createStatement()) {
-
-            ResultSet rs = statement.executeQuery(selectSQL);
-            listViewResults.setStyle("-fx-font-family: 'Monospaced';");
-            labelViewInfo.setText("Songs sorted by: " + selectedSorting);
-
-            listViewResults.getItems().clear();
-
-            while (rs.next()) {
-                String songName = rs.getString("sname");
-                String artist = rs.getString("aname");
-                String album = rs.getString("album");
-                int length = rs.getInt("length");
-
-                String lengthFormatted = formatDuration(length);
-
-                String result = String.format("%-25s | %-20s | %-24s | %5s", songName, artist, album, lengthFormatted);
-                listViewResults.getItems().add(result + "\n");
+        try (PreparedStatement preparedStatement = connect.prepareStatement(selectSQL)) {
+            //If a genre other than "All Genres" is selected, set the genre parameter
+            if (!"All Genres".equals(selectedGenre)) {
+                preparedStatement.setString(1, selectedGenre);
             }
 
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                listViewResults.setStyle("-fx-font-family: 'Monospaced';");
+                labelViewInfo.setText("Songs sorted by: " + selectedSorting);
+
+                listViewResults.getItems().clear();
+
+                while (rs.next()) {
+                    String songName = rs.getString("sname");
+                    String artist = rs.getString("aname");
+                    String album = rs.getString("album");
+                    int length = rs.getInt("length");
+
+                    String lengthFormatted = formatDuration(length);
+
+                    String result = String.format("%-25s | %-20s | %-24s | %5s", songName, artist, album, lengthFormatted);
+                    listViewResults.getItems().add(result + "\n");
+                }
+
+            }
         } catch (SQLException e) {
             listViewResults.getItems().add("Error fetching data: " + e.getMessage() + "\n");
             e.printStackTrace();
