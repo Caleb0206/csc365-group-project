@@ -93,9 +93,6 @@ public class PlaylistController {
         playlistPane.getChildren().addAll(title, addSongButton, playlistSongsView);
         playlistTab.setContent(playlistPane);
         tabPane.getTabs().add(playlistTab); // Add the tab to the TabPane
-
-        // Switch to the new tab
-        tabPane.getSelectionModel().select(playlistTab);
     }
 
     /** Loads songs for the playlist through fetching from DB */

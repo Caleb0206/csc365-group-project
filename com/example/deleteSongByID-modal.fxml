@@ -6,12 +6,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="396.0" style="-fx-background-color: lightblue;" styleClass="anchor-pane" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SongController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="193.0" prefWidth="396.0" style="-fx-background-color: lightblue;" styleClass="anchor-pane" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SongController">
    <children>
       <TextField fx:id="deleteSongTextField" layoutX="14.0" layoutY="55.0" promptText="Song Name" styleClass="search-bar" />
       <Text layoutX="14.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-heading" text="Delete Song By Name" wrappingWidth="213.56639862060547" />
-      <Button fx:id="deleteSongButton" layoutX="327.0" layoutY="51.0" mnemonicParsing="false" onAction="#deleteSongFunc" style="-fx-background-color: red; -fx-text-fill: white;" styleClass="btn" text="Delete" />
-      <Button fx:id="closeModalButton" layoutX="261.0" layoutY="51.0" mnemonicParsing="false" onAction="#closeModal" style="-fx-background-color: grey; -fx-opacity-insets: 0.5;" styleClass="btn" text="Cancel" />
+      <Button fx:id="deleteSongButton" layoutX="327.0" layoutY="146.0" mnemonicParsing="false" onAction="#deleteSongFunc" style="-fx-background-color: red; -fx-text-fill: white;" styleClass="btn" text="Delete" />
+      <Button fx:id="closeModalButton" layoutX="268.0" layoutY="146.0" mnemonicParsing="false" onAction="#closeModal" style="-fx-background-color: grey; -fx-opacity-insets: 0.5;" styleClass="btn" text="Cancel" />
       <Label fx:id="connectDatabase" layoutX="14.0" layoutY="39.0" />
+      <Label fx:id="errorLabel" layoutX="14.0" layoutY="163.0" />
+      <TextField fx:id="deleteArtistNameField" layoutX="14.0" layoutY="90.0" promptText="Artist Name" styleClass="search-bar" />
    </children>
 </AnchorPane>

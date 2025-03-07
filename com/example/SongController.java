@@ -20,9 +20,14 @@ public class SongController {
     private Label connectDatabase;
 
     @FXML
+    private Label errorLabel;
+
+    @FXML
     private Button closeModalButton;
     @FXML
     private TextField deleteSongTextField;
+    @FXML
+    private TextField deleteArtistNameField;
 
     @FXML
     public void initialize() {
@@ -55,11 +60,44 @@ public class SongController {
 
     @FXML
     private void deleteSongFunc(ActionEvent event){
-         String songName = deleteSongTextField.getText().trim();
-        try (Statement statement = connect.createStatement()) {
-            String query = String.format("DELETE FROM Song WHERE Song.sname = '%s';", songName);
-            statement.executeUpdate(query);
+        String songName = deleteSongTextField.getText().trim();
+        String artistName = deleteArtistNameField.getText().trim();
+        if (songName.isEmpty()) {
+            errorLabel.setText("Please enter a song name and artist name.");
+            errorLabel.setVisible(true);
+            return;
+        }
 
+        String checkQuery = "SELECT COUNT(*) FROM Song WHERE sname = ? AND sid IN ( " +
+                            "SELECT sid FROM Performs WHERE aid = (SELECT aid FROM Artist WHERE aname = ?))";
+
+        // Query to delete the song from Song table
+        String deleteQuery = "DELETE FROM Song WHERE sname = ? AND sid IN ( " +
+                "SELECT sid FROM Performs WHERE aid = (SELECT aid FROM Artist WHERE aname = ?))";
+
+        try (PreparedStatement checkStatement = connect.prepareStatement(checkQuery);
+             PreparedStatement deleteStatement = connect.prepareStatement(deleteQuery)) {
+            // Check if the song by the given artist exists
+            checkStatement.setString(1, songName);
+            checkStatement.setString(2, artistName);
+            ResultSet resultSet = checkStatement.executeQuery();
+
+            if (resultSet.next() && resultSet.getInt(1) == 0) {
+                // Song by this artist not found, show error
+                errorLabel.setText("Song not found for the given artist.");
+                errorLabel.setVisible(true);
+                return;
+            }
+
+            // If found, proceed with deletion
+            deleteStatement.setString(1, songName);
+            deleteStatement.setString(2, artistName);
+            deleteStatement.executeUpdate();
+
+            // refresh the ListView in main controller
+            if(mainController != null) {
+                mainController.onOpenFetchSongs();
+            }
             closeModal(null);
         } catch (SQLException e) {
             e.printStackTrace();
