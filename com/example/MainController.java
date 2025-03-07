@@ -29,48 +29,33 @@ public class MainController {
 
     private Connection connect;
     private PlaylistController playlistController;
+
     @FXML
     private TextField searchField;
-
     @FXML
     private RadioButton radioButtonArtist;
-
     @FXML
     private RadioButton radioButtonSong;
-
     @FXML
     private CheckBox checkboxReverse;
-
     @FXML
     private RadioButton radioButtonAlbum;
-
     private ToggleGroup toggleGroup;
-
     private ToggleGroup reverseToggle;
-
     @FXML
     private ChoiceBox sortingChoice;
-
     @FXML
     private Label labelViewInfo;
-
     @FXML
     private Label connectDatabase;
-
     @FXML
     private ListView<String> listViewResults;
-
     private List<String> currentResults = new ArrayList<>();
     private boolean showingSearchResults = false;
-
     @FXML
     private ChoiceBox genreChoice;
-
-
-
     @FXML
     private TabPane tabPane;
-
 
     @FXML
     public void initialize() {
@@ -85,13 +70,13 @@ public class MainController {
         radioButtonSong.setToggleGroup(toggleGroup);
         radioButtonAlbum.setToggleGroup(toggleGroup);
 
+        //Create listener to check for reverse list events
         checkboxReverse.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 onFetchButtonClick();
         });
 
-        sortingChoice.getItems().addAll("Song Name", "Song Duration");
+        sortingChoice.getItems().addAll("Song Name", "Song Duration"); //list of possible sort bys
         sortingChoice.setValue("Song Name");
-
 
         // Load existing playlists on startup
         playlistController.loadExistingPlaylists();
@@ -144,6 +129,45 @@ public class MainController {
         onOpenFetchSongs();
     }
 
+    @FXML
+    private void insertSongButton(ActionEvent event){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("insertSong-modal.fxml"));
+            Parent root = fxmlLoader.load();
+
+            SongController songController = fxmlLoader.getController();
+            songController.setMainController(this);
+
+            Stage modalStage = new Stage();
+            modalStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with the main window
+            modalStage.setTitle("Insert song ");
+            modalStage.setScene(new Scene(root));
+            modalStage.showAndWait(); // Wait until the modal is closed
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void deleteSongByIDButton(ActionEvent event){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("deleteSongByID-modal.fxml"));
+            Parent root = fxmlLoader.load();
+
+            SongController songController = fxmlLoader.getController();
+            songController.setMainController(this);
+
+            Stage modalStage = new Stage();
+            modalStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with the main window
+            modalStage.setTitle("Delete song by id");
+            modalStage.setScene(new Scene(root));
+            modalStage.showAndWait(); // Wait until the modal is closed
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     @FXML

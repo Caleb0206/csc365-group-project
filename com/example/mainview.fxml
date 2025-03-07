@@ -14,11 +14,10 @@
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <TabPane fx:id="tabPane" prefHeight="700.0" prefWidth="784.0" styleClass="anchor-pane" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.MainController">
     <tabs>
         <Tab text="Songs">
-            <AnchorPane prefHeight="642.0" prefWidth="784.0" styleClass="anchor-pane" stylesheets="@../../style.css" >
+            <AnchorPane prefHeight="642.0" prefWidth="784.0" styleClass="anchor-pane" stylesheets="@../../style.css">
                 <Button fx:id="buttonFetch" layoutX="477.0" layoutY="31.0" onAction="#onFetchButtonClick" styleClass="btn" stylesheets="@../../style.css" text="Search" />
                 <Label fx:id="connectDatabase" layoutX="45.0" layoutY="104.0" prefHeight="18.0" prefWidth="200.0" styleClass="body-text" text="Database Server Status" />
                 <TextField fx:id="searchField" layoutX="195.0" layoutY="31.0" prefHeight="26.0" prefWidth="270.0" promptText="Search..." />
@@ -50,6 +49,8 @@
                 <CheckBox fx:id="checkboxReverse" layoutX="483.0" layoutY="129.0" mnemonicParsing="false" styleClass="body-text" text="Reverse" />
                 <ChoiceBox fx:id="genreChoice" layoutX="27.0" layoutY="24.0" onAction="#onOpenFetchSongs" prefWidth="150.0" styleClass="context-menu" />
                 <Button fx:id="createPlaylistButton" layoutX="45.0" layoutY="573.0" onAction="#onCreatePlaylist" style="-fx-background-color: lightblue;" styleClass="btn" text="Create Playlist" />
+            <Button fx:id="deleteSongByIDButton" layoutX="640.0" layoutY="573.0" onAction="#deleteSongByIDButton" style="-fx-background-color: f54f07;" styleClass="btn" text="Delete Song" />
+            <Button fx:id="insertSongButton" layoutX="548.0" layoutY="573.0" onAction="#insertSongButton" style="-fx-background-color: green;" styleClass="btn" text="Insert Song" />
             </AnchorPane>
         </Tab>
     </tabs>

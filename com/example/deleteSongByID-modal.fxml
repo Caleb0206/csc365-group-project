@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="396.0" style="-fx-background-color: lightblue;" styleClass="anchor-pane" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SongController">
+   <children>
+      <TextField fx:id="deleteSongTextField" layoutX="14.0" layoutY="55.0" promptText="Song Name" styleClass="search-bar" />
+      <Text layoutX="14.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-heading" text="Delete Song By Name" wrappingWidth="213.56639862060547" />
+      <Button fx:id="deleteSongButton" layoutX="327.0" layoutY="51.0" mnemonicParsing="false" onAction="#deleteSongFunc" style="-fx-background-color: green; -fx-text-fill: white;" styleClass="btn" text="Insert" />
+      <Button fx:id="closeModalButton" layoutX="261.0" layoutY="51.0" mnemonicParsing="false" onAction="#closeModal" style="-fx-background-color: grey; -fx-opacity-insets: 0.5;" styleClass="btn" text="Cancel" />
+      <Label fx:id="connectDatabase" layoutX="14.0" layoutY="39.0" />
+   </children>
+</AnchorPane>
