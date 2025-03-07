@@ -65,27 +65,28 @@ public class SongController {
     private void insertSongFunc(ActionEvent event){
         String songName = insertSongName.getText().trim();
         String songAlbum = insertSongAlbum.getText().trim();
-        String songLength = insertSongLength.getText().trim();
+        int songLength = Integer.parseInt(insertSongLength.getText().trim());
         String songGenre = insertSongGenre.getText().trim();
 
         try (Statement statement = connect.createStatement()) {
-            String arguments = String.format("(%s,%s,%s,%s);",songName,songAlbum,songLength,songGenre);
-            String query = String.format("INSERT INTO Song(s.sname, s.album, s.length, s.genre) VALUES " + arguments);
-            statement.executeQuery(query);
+            String arguments = String.format("('%s','%s',%d,'%s');",songName,songAlbum,songLength,songGenre);
+            String query = String.format("INSERT INTO Song(sname, album, length, genre) VALUES " + arguments);
+            //System.out.println("Q: " + query);
+            statement.executeUpdate(query);
 
             //VERIFICATION
             ResultSet rs;
             query = String.format(
-                    "SELECT * FROM Song WHERE " +
-                            "s.sname = '%s' " +
-                            "s.album = '%s' " +
-                            "s.length = '%s'" +
-                            "s.genre = '%s'"
+                    "SELECT * FROM Song s WHERE " +
+                            "s.sname = '%s' AND " +
+                            "s.album = '%s' AND " +
+                            "s.length = '%s' AND " +
+                            "s.genre = '%s';"
                     ,songName, songAlbum, songLength, songGenre);
             rs = statement.executeQuery(query);
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
-            System.out.println("Inserted: ");
+            //System.out.println("Inserted: ");
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
                     if (i > 1) System.out.print(",  ");
