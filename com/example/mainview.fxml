@@ -50,7 +50,6 @@
                 <ChoiceBox fx:id="genreChoice" layoutX="27.0" layoutY="24.0" onAction="#onOpenFetchSongs" prefWidth="150.0" styleClass="context-menu" />
                 <Button fx:id="createPlaylistButton" layoutX="45.0" layoutY="573.0" onAction="#onCreatePlaylist" style="-fx-background-color: lightblue;" styleClass="btn" text="Create Playlist" />
             <Button fx:id="deleteSongByIDButton" layoutX="640.0" layoutY="573.0" onAction="#deleteSongByIDButton" style="-fx-background-color: f54f07;" styleClass="btn" text="Delete Song" />
-            <Button fx:id="insertSongButton" layoutX="548.0" layoutY="573.0" onAction="#insertSongButton" style="-fx-background-color: green;" styleClass="btn" text="Insert Song" />
             </AnchorPane>
         </Tab>
     </tabs>

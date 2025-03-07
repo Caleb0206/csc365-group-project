@@ -41,7 +41,6 @@ public class MainController {
     @FXML
     private RadioButton radioButtonAlbum;
     private ToggleGroup toggleGroup;
-    private ToggleGroup reverseToggle;
     @FXML
     private ChoiceBox sortingChoice;
     @FXML
@@ -127,26 +126,6 @@ public class MainController {
         genreChoice.setValue("All Genres");
 
         onOpenFetchSongs();
-    }
-
-    @FXML
-    private void insertSongButton(ActionEvent event){
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("insertSong-modal.fxml"));
-            Parent root = fxmlLoader.load();
-
-            SongController songController = fxmlLoader.getController();
-            songController.setMainController(this);
-
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with the main window
-            modalStage.setTitle("Insert song ");
-            modalStage.setScene(new Scene(root));
-            modalStage.showAndWait(); // Wait until the modal is closed
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML
