@@ -85,12 +85,26 @@ public class PlaylistController {
         addSongButton.setLayoutY(50);
         addSongButton.setOnAction(event -> addSongToPlaylist(playlistName, playlistSongsView));
 
+        // "Delete Playlist" Button
+        Button deletePlaylistButton = new Button("Delete Playlist");
+        deletePlaylistButton.setStyle("-fx-padding: 8px 10px;\n" +
+                "    -fx-background-color: #FF6B6B;\n" +
+                "    -fx-text-fill: white;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-border-radius: 999px;\n" +
+                "    -fx-background-radius: 999px;\n" +
+                "    -fx-cursor: hand;");
+        deletePlaylistButton.setLayoutX(120);
+        deletePlaylistButton.setLayoutY(50);
+        deletePlaylistButton.setOnAction(event -> deletePlaylist(playlistName, playlistTab));
+
+
         // Positioning
         playlistSongsView.setLayoutX(20);
         playlistSongsView.setLayoutY(100);
         playlistSongsView.setPrefSize(680, 500);
 
-        playlistPane.getChildren().addAll(title, addSongButton, playlistSongsView);
+        playlistPane.getChildren().addAll(title, addSongButton, deletePlaylistButton, playlistSongsView);
         playlistTab.setContent(playlistPane);
         tabPane.getTabs().add(playlistTab); // Add the tab to the TabPane
     }
@@ -210,6 +224,36 @@ public class PlaylistController {
             }
         });
     }
+
+    private void deletePlaylist(String playlistName, Tab playlistTab) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setGraphic(null);
+        alert.setTitle("Delete Playlist");
+        alert.setHeaderText("Are you sure you want to delete this playlist?");
+        alert.setContentText("This action cannot be undone.");
+
+        // Wait for user confirmation
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            String deleteQuery = "DELETE FROM Playlist WHERE plname = ?";
+
+            try (PreparedStatement statement = connect.prepareStatement(deleteQuery)) {
+                statement.setString(1, playlistName);
+                int rowsDeleted = statement.executeUpdate();
+
+                if (rowsDeleted > 0) {
+                    tabPane.getTabs().remove(playlistTab); // Remove tab from UI
+                    System.out.println("Playlist deleted successfully: " + playlistName);
+                } else {
+                    showErrorDialog("Error", "Failed to delete playlist.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                showErrorDialog("Database Error", "An error occurred while deleting the playlist.");
+            }
+        }
+    }
+
 
     // Method to show an error dialog
     private void showErrorDialog(String title, String message) {
