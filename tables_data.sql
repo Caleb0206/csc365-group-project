@@ -1,5 +1,4 @@
 -- Insert more sample data for Artist, Song, and Performs with valid genres
-
 INSERT INTO Artist (aname) VALUES 
 ('Sabrina Carpenter'),
 ('Taylor Swift'),
@@ -53,7 +52,9 @@ INSERT INTO Artist (aname) VALUES
 ('The Offspring'),
 ('Blink-182'),
 ('The Beatles'),
-('Queen');
+('Queen'),
+('Bon Jovi'),
+('(G)I-DLE');
 
 INSERT INTO Song (sname, album, genre, length) VALUES 
 ('Espresso', 'Short n\' Sweet', 'pop', 175),
@@ -90,13 +91,15 @@ INSERT INTO Song (sname, album, genre, length) VALUES
 ('I Like It', 'Invasion of Privacy', 'latin', 261),
 ('Taki Taki', 'Taki Taki', 'reggae', 203),
 ('Hips Don\'t Lie', 'Oral Fixation, Vol. 2', 'latin', 238),
-('Chandelier', '1000 Forms of Fear', 'pop', 231),
+('Vicious', 'emails i can\'t send', 'pop', 150),
 ('Smells Like Teen Spirit', 'Nevermind', 'punk', 301),
 ('American Idiot', 'American Idiot', 'punk', 258),
-('I Write Sins Not Tragedies', 'A Fever', 'punk', 232),
 ('Bohemian Rhapsody', 'A Night at the Opera', 'rock', 354),
 ('We Will Rock You', 'News of the World', 'rock', 155),
-('Under Pressure', 'Hot Space', 'rock', 242);
+('Under Pressure', 'Hot Space', 'rock', 242),
+('Livin\' On A Prayer', 'Slippery When Wet', 'rock', 250),
+('You Give Love A Bad Name', 'Slippery When Wet', 'rock', 222),
+('Oh My God', 'I Trust', 'kpop', 196);
 
 -- Insert data for Performs (Artist-Song relationships)
 
@@ -129,23 +132,18 @@ INSERT INTO Performs (aid, sid) VALUES
 (26, 26), -- Doja Cat -> Say So
 (27, 27), -- Lil Wayne -> Lollipop
 (28, 28), -- Halsey -> Without Me
-(29, 29), -- Sam Smith -> Happier Than Ever
+(7, 29),  -- Billie Eilish -> Happier Than Ever
 (30, 30), -- Bebe Rexha -> Roses
-(31, 31), -- Blackpink -> Hot Girl Bummer
-(32, 32), -- Shakira -> I Like It
-(33, 33), -- Pitbull -> Taki Taki
-(34, 34), -- Selena Gomez -> Hips Don’t Lie
-(35, 35), -- Cardi B -> Chandelier
+(42, 31), -- Twenty One Pilots -> Hot Girl Bummer
+(35, 32), -- Cardi B -> I Like It
+(34, 33), -- Selena Gomez -> Taki Taki
+(32, 34), -- Shakira -> Hips Don’t Lie
+(1, 35),  -- Sabrina Carpenter -> Vicious
 (36, 36), -- Florence + The Machine -> Smells Like Teen Spirit
 (37, 37), -- The Killers -> American Idiot
-(38, 38), -- Green Day -> I Write Sins Not Tragedies
-(39, 39), -- Panic! At The Disco -> Bohemian Rhapsody
-(40, 40); -- Twenty One Pilots -> We Will Rock You
-
-INSERT INTO Playlist (plname) VALUES ('Playlist#1');
-INSERT INTO Playlist_Song (plid, sid) VALUES (1, 1);
-
-select * from Song;
-select * from Artist;
-select * from Performs;
+(53, 38), -- Queen -> Bohemian Rhapsody
+(53, 39), -- Queen-> We Will Rock You
+(54, 41), -- Bon Jovi -> Livin' On A Prayer
+(54, 42), -- Bon Jovi -> You Give Love A Bad Name
+(55, 43); -- (G)I-DLE -> Oh My God
 

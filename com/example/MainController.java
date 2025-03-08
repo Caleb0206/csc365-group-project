@@ -83,7 +83,7 @@ public class MainController {
         genreChoice.getItems().addAll(
                 "All Genres", "Pop", "Hip-Hop", "Rap", "Country", "Reggae",
                 "R&B", "Folk", "Blues", "EDM", "Classical", "Rock", "Jazz",
-                "Metal", "Punk", "Latin", "K-Pop", "Other"
+                "Metal", "Punk", "Latin", "KPop", "Other"
         );
         genreChoice.setValue("All Genres");
 

@@ -32,7 +32,3 @@ create table Playlist_Song (
     foreign key (plid) references Playlist(plid) on delete cascade,
     foreign key (sid) references Song(sid) on delete cascade
 );
-
-drop table Playlist_Song;
-drop table Playlist;
-
