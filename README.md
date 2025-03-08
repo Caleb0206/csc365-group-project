@@ -1,5 +1,7 @@
 # csc365-group-project
 
+## Project Description Document, Work Log, and Slides PPT can be found under /Documents
+
 ## Database Login
 
 hostname: ambari-node5.csc.calpoly.edu
