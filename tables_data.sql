@@ -140,10 +140,9 @@ INSERT INTO Performs (aid, sid) VALUES
 (32, 34), -- Shakira -> Hips Don’t Lie
 (1, 35),  -- Sabrina Carpenter -> Vicious
 (36, 36), -- Florence + The Machine -> Smells Like Teen Spirit
-(37, 37), -- The Killers -> American Idiot
+(40, 37), -- Green Day -> American Idiot
 (53, 38), -- Queen -> Bohemian Rhapsody
 (53, 39), -- Queen-> We Will Rock You
 (54, 41), -- Bon Jovi -> Livin' On A Prayer
 (54, 42), -- Bon Jovi -> You Give Love A Bad Name
 (55, 43); -- (G)I-DLE -> Oh My God
-
